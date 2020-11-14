@@ -1,0 +1,89 @@
+###
+##
+# * TASKFILE
+#  https://taskfile.dev
+#
+version: '3'
+
+vars:
+
+  name:                     powerdns
+
+  #chartRepoName:            "thesym.site/library"                                ### library
+  chartRepoName:            "thesym.site"                                        ### project
+  chartName:                "{{.name}}"
+
+  message:                   Tasks for {{.name}}{{if .chartName}}-helm{{end}}
+
+  helmchartRepoSrcPath:      "/home/frank/SRC/GITHUB/jitsi-helm"
+
+
+tasks:
+
+  taskDebug:
+    desc: show all variables in Taskfile
+    cmds:
+      - |
+        echo -e \
+        "\n{{range $key, $value := .}} {{$key }}:  \e[92m{{$value}}\e[0m\n {{end}}\n"
+    silent: true
+
+
+  default:
+    desc: display info
+    cmds:
+      - |
+        echo -e \
+        "\n{{.message}}\n"
+      - |
+        task -l
+    silent: true
+
+
+###
+##
+# ** SEQUENCE
+#
+  1:
+    desc: ( chartSignedAdd2Repo )
+    cmds:
+      - task: chartSignedAdd2Repo
+    silent: true
+
+
+  # 2:
+  #   desc: (  )
+  #   cmds:
+  #     - task: 
+  #   silent: true
+
+
+  # 3:
+  #   desc: (  )
+  #   cmds:
+  #     - task: 
+  #   silent: true
+
+###
+##
+# ** ALPHABETIC
+#
+  chartAdd2Repo:
+    #desc: "add the helmChart to harbor.thesym.site/library"
+    desc: "add the helmChart to harbor.thesym.site/{{.name}}"
+    cmds:
+      ### needs a path to a repository
+      # - summon --up bash -c 'helm push --username=frank --password=${PASSWORD} . https://harbor.thesym.site/chartrepo'                                       ### library
+      - summon --up bash -c 'helm push --username=frank --password=${PASSWORD} .  https://harbor.thesym.site/chartrepo/{{.name}}'                             ### project
+    silent: true
+
+
+  chartSignedAdd2Repo:
+    desc: "add the signed helmChart to harbor.thesym.site/library"
+    cmds:
+      - |
+        helm package --sign --key frank@thesym.site .
+        # summon --up bash -c 'curl -F "chart=@`ls {{.name}}-*.tgz`" -F "prov=@`ls {{.name}}-*.tgz.prov`" https://frank:${PASSWORD}@harbor.thesym.site/api/chartrepo/charts'           ### library
+        summon --up bash -c 'curl -F "chart=@`ls {{.name}}-*.tgz`" -F "prov=@`ls {{.name}}-*.tgz.prov`" https://frank:${PASSWORD}@harbor.thesym.site/api/chartrepo/{{.name}}/charts' ### project
+        rm ./{{.name}}-*.tgz*
+    silent: true
