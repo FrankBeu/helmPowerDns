@@ -87,3 +87,10 @@ tasks:
         summon --up bash -c 'curl -F "chart=@`ls {{.name}}-*.tgz`" -F "prov=@`ls {{.name}}-*.tgz.prov`" https://frank:${PASSWORD}@harbor.thesym.site/api/chartrepo/{{.name}}/charts' ### project
         rm ./{{.name}}-*.tgz*
     silent: true
+
+
+  helmDependencyRepoAdd:
+    desc: "add the repo for the dependency"
+    cmds:
+      - helm repo add bitnami https://charts.bitnami.com/bitnami
+    silent: true
