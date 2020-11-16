@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "powerDns.fullname" . }}-test-connection"
+  name: "{{ include "powerdns.fullname" . }}-test-connection"
   labels:
-    {{- include "powerDns.labels" . | nindent 4 }}
+    {{- include "powerdns.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "powerDns.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "powerdns.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
