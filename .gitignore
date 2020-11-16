@@ -1,1 +1,36 @@
+###
+##
+# * GITIGNORE
+#
+
+###
+##
+# ** COMMON BACKUP FILES
+#
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+
+###
+##
+# ** VARIOUS IDES
+#
+.project
+.idea/
+*.tmproj
+.vscode/
+
+###
+##
+# ** FOLDERS
+#
 ARCHIVE
+
+###
+##
+# ** FILES
+#
+Taskfile.yml
+secrets.yml
