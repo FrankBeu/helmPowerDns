@@ -1,26 +1,29 @@
-# Default values for powerDns.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+###
+## * POWERDNS
+#    Default values for powerDns.
+#    This is a YAML-formatted file.
+#    Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: discourse/powerdns
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  ### Overrides the image tag whose default is the chart appVersion.
+  # tag: ""
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  ### Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
+  ### Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  ### The name of the service account to use.
+  ### If not set and create is true, a name is generated using the fullname template
   name: ""
 
 podAnnotations: {}
@@ -37,8 +40,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 80
+  type: NodePort
+  port: 53
 
 ingress:
   enabled: false
@@ -54,10 +57,10 @@ ingress:
   #      - chart-example.local
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ### We usually recommend not to specify default resources and to leave this as a conscious
+  ### choice for the user. This also increases chances charts run on environments with little
+  ### resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ### lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
@@ -77,3 +80,29 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+powerdns:
+  postgres:
+    host: localhost
+    port: 5432
+    username: pdns
+    password: ""
+    database: pdns
+  dnssec: true
+  config: {}
+
+###
+##
+# ** postgresql
+#
+postgresql:
+  initdbScriptsConfigMap: initdbscript
+  global:
+    postgresql:
+      postgresqlDatabase: pdns
+      postgresqlUsername: pdns
+      postgresqlPassword: pdns
+      servicePort: 5432
+  persistence:
+    size: 1Gi

@@ -26,4 +26,4 @@
 ##
 # ** FILES
 Taskfile.yml
-.secrets.yml
+secrets.yml

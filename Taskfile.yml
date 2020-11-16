@@ -13,9 +13,9 @@ vars:
   chartRepoName:            "thesym.site"                                        ### project
   chartName:                "{{.name}}"
 
-  message:                   Tasks for {{.name}}{{if .chartName}}-helm{{end}}
+  message:                   Tasks for {{.name}}-helm
 
-  helmchartRepoSrcPath:      "/home/frank/SRC/GITHUB/jitsi-helm"
+  templateDebugTarget:      "initDbScriptConfigMap"
 
 
 tasks:
@@ -78,6 +78,18 @@ tasks:
     silent: true
 
 
+  chartDebug:
+    desc: debug chart
+    cmds:
+      - |
+        helm install \
+        {{.name}} \
+        . \
+        --dry-run \
+        --debug
+    silent: true
+
+
   chartSignedAdd2Repo:
     desc: "add the signed helmChart to harbor.thesym.site/library"
     cmds:
@@ -93,4 +105,14 @@ tasks:
     desc: "add the repo for the dependency"
     cmds:
       - helm repo add bitnami https://charts.bitnami.com/bitnami
+    silent: true
+
+
+  templateDebug:
+    desc: "debug template; USAGE: `task templateDebug templateDebugTarget=admin`; DEFAULT: ingress"
+    cmds:
+      - |
+        helm template . \
+        --debug \
+        -s templates/{{.templateDebugTarget}}.yaml
     silent: true
