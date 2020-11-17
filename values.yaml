@@ -81,16 +81,16 @@ tolerations: []
 
 affinity: {}
 
+clusterDomain: cluster.local
 
+###
+##
+# ** powerdns
+#
 powerdns:
-  postgres:
-    host: localhost
-    port: 5432
-    username: pdns
-    password: ""
-    database: pdns
   dnssec: true
   config: {}
+  # api_key: ""
 
 ###
 ##
@@ -106,3 +106,9 @@ postgresql:
       servicePort: 5432
   persistence:
     size: 1Gi
+
+###
+##
+# ** powerdnsadmin
+#
+powerdnsadmin:

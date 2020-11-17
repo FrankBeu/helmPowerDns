@@ -33,20 +33,63 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+          - name: config
+            mountPath: /etc/powerdns/pdns.d
+          env:
+            - name: PGSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_host
+            - name: PGSQL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_port
+            - name: PGSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_username
+            - name: PGSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_password
+            - name: PGSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_database
+            - name: PGSQL_DNSSEC
+              value: {{if (.Values.powerdns.dnssec)}}"yes"{{else}}"no"{{ end }}
           ports:
-            - name: http
-              containerPort: 80
+            - name: dns-tcp
+              containerPort: 53
               protocol: TCP
+            - name: dns-udp
+              containerPort: 53
+              protocol: UDP
+            {{ if (.Values.powerdns.api_key) }}
+            - name: dns-webserver
+              containerPort: 8081
+              protocol: TCP
+            {{ end }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - service pdns status
+            initialDelaySeconds: 30
+            periodSeconds: 20
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "powerdns.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

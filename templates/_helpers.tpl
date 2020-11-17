@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "postgresql.dns" -}}
+{{/*
+{{- printf "%s-postgresql.%s.svc.%s:%g" .Release.Name .Release.Namespace .Values.clusterDomain .Values.postgresql.global.postgresql.servicePort -}}
+*/}}
+{{- printf "%s-postgresql.%s" .Release.Name .Release.Namespace -}}
+{{- end -}}
