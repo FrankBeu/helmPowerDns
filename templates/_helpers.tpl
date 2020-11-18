@@ -1,4 +1,9 @@
 {{/*
+* POWERDNS-TPL
+** POWERDNS
+*/}}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "powerdns.name" -}}
@@ -62,8 +67,32 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "postgresql.dns" -}}
-{{/*
-{{- printf "%s-postgresql.%s.svc.%s:%g" .Release.Name .Release.Namespace .Values.clusterDomain .Values.postgresql.global.postgresql.servicePort -}}
-*/}}
 {{- printf "%s-postgresql.%s" .Release.Name .Release.Namespace -}}
+{{- end -}}
+
+{{/*
+** POWERDNSADMIN
+*/}}
+{{/*
+Common labels
+*/}}
+{{- define "powerdnsadmin.labels" -}}
+helm.sh/chart: {{ include "powerdns.chart" . }}
+{{ include "powerdnsadmin.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "powerdnsadmin.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "powerdns.name" . }}-admin
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "powerdnsadmin.postgresql.dns" -}}
+{{- printf "postgresql://%s:%s@%s-postgresql.%s:%.f/%s" .Values.postgresql.global.postgresql.postgresqlUsername .Values.postgresql.global.postgresql.postgresqlPassword .Release.Name .Release.Namespace .Values.postgresql.global.postgresql.servicePort .Values.postgresql.global.postgresql.postgresqlDatabase -}}
 {{- end -}}

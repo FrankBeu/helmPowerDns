@@ -15,7 +15,7 @@ vars:
 
   message:                   Tasks for {{.name}}-helm
 
-  templateDebugTarget:      "initDbScriptConfigMap"
+  templateDebugTarget:      "powerdns/initDbScriptConfigMap"
 
 
 tasks:
