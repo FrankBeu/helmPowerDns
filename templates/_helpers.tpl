@@ -89,7 +89,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "powerdnsadmin.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "powerdns.name" . }}-admin
+app.kubernetes.io/name: {{ include "powerdns.name" . }}admin
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

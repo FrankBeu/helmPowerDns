@@ -1,0 +1,8 @@
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: {{ include "powerdns.name" . }}admin
+spec:
+  prefix: /
+  service: {{ include "powerdns.name" . }}-admin.{{ include "powerdns.name" . }}:{{ .Values.powerdnsadmin.service.port }}
+  host: {{ .Values.powerdnsadmin.host.name }}

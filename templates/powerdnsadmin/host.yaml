@@ -1,0 +1,22 @@
+apiVersion: getambassador.io/v2
+kind: Host
+metadata:
+  name: {{ include "powerdns.name" . }}admin
+  namespace: {{ .Values.powerdnsadmin.host.namespace }}
+spec:
+  hostname: {{ .Values.powerdnsadmin.host.name }}
+  image:
+  acmeProvider:
+    {{- if .Values.powerdnsadmin.host.certStaging }}
+    authority: https://acme-staging-v02.api.letsencrypt.org/directory
+    {{- else}}
+    authority: https://acme-v02.api.letsencrypt.org/directory
+    {{- end}}
+    email: {{.Values.powerdnsadmin.host.acmeEmail}}
+    privateKeySecret:
+      name: {{ .Values.powerdnsadmin.host.privateKeySecretName }}{{- if .Values.powerdnsadmin.host.certStaging }}-staging{{- end}}
+  tlsSecret:
+    name: {{ include "powerdns.name" . }}admin
+  requestPolicy:
+    insecure:
+      action: Redirect

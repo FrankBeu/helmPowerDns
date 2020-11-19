@@ -51,19 +51,6 @@ tasks:
     silent: true
 
 
-  # 2:
-  #   desc: (  )
-  #   cmds:
-  #     - task: 
-  #   silent: true
-
-
-  # 3:
-  #   desc: (  )
-  #   cmds:
-  #     - task: 
-  #   silent: true
-
 ###
 ##
 # ** ALPHABETIC

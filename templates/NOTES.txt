@@ -34,4 +34,4 @@ Get the application URL by running these commands:
 #
 You can visit the admin-Gui via:
 
-  https://{{ .Values.powerdnsadmin.host.domain }}/
+  https://{{ .Values.powerdnsadmin.host.name }}/

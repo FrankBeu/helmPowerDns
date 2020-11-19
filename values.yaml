@@ -124,9 +124,13 @@ powerdnsadmin:
   service:
     type: ClusterIP
     port: 9191
+  filter: "basic-auth" ### {"basic-allow"|"basic-auth"|"basic-deny"|"ory"}
   host:
-    domain: example.org
+    acmeEmail:            "name@youremail.org"
+    certStaging:          false     ### true: letsencryptStaging; false:letsencrypt
+    name: example.org
     namespace: ambassador-hosts
+    privateKeySecretName: "letsencrypt-youremail.org"
   resources: {}
   # resources:
   #   limits:

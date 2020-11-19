@@ -1,0 +1,15 @@
+apiVersion: getambassador.io/v2
+kind: FilterPolicy
+metadata:
+  name: {{ include "powerdns.name" . }}admin
+spec:
+  rules:
+  - host: {{ .Values.powerdnsadmin.host.name }}
+    path: "*"
+    filters:
+    - name: {{if eq .Values.powerdnsadmin.filter "basic-allow"}}"basic-auth"{{else}}{{.Values.powerdnsadmin.filter}}{{end}}
+      namespace: "ambassador"
+      {{- if eq .Values.powerdnsadmin.filter "basic-allow"}}
+      onDeny:  "continue"
+      onAllow: "continue"
+      {{- end}}

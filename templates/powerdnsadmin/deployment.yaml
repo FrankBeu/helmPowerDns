@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "powerdns.fullname" . }}-admin
+  name: {{ include "powerdns.fullname" . }}admin
   labels:
 {{ include "powerdnsadmin.labels" . | indent 4 }}
 spec:
@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "powerdns.name" . }}-admin
+        app.kubernetes.io/name: {{ include "powerdns.name" . }}admin
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/powerdnsadmin/secret.yaml") . | sha256sum }}
@@ -27,7 +27,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-admin
+        - name: {{ .Chart.Name }}admin
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.powerdnsadmin.image.repository }}:{{ tpl .Values.powerdnsadmin.image.tag . }}"
@@ -36,7 +36,7 @@ spec:
             - name: SQLALCHEMY_DATABASE_URI
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "powerdns.fullname" . }}-admin
+                  name: {{ include "powerdns.fullname" . }}admin
                   key: SQLALCHEMY_DATABASE_URI
           ports:
             - name: http
