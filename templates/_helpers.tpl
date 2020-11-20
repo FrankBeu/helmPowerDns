@@ -94,5 +94,5 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "powerdnsadmin.postgresql.dns" -}}
-{{- printf "postgresql://%s:%s@%s-postgresql.%s:%.f/%s" .Values.postgresql.global.postgresql.postgresqlUsername .Values.postgresql.global.postgresql.postgresqlPassword .Release.Name .Release.Namespace .Values.postgresql.global.postgresql.servicePort .Values.postgresql.global.postgresql.postgresqlDatabase -}}
+{{- printf "postgresql://%s:%s@%s-postgresql.%s:%.f/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword .Release.Name .Release.Namespace .Values.postgresql.servicePort .Values.powerdnsadmin.db.name -}}
 {{- end -}}

@@ -3,7 +3,25 @@ kind: ConfigMap
 metadata:
   name: initdbscript
 data:
-  schemaDefault.sql: |
+  1-createPdnsAdminDb.sql: |
+    -- Database: {{ .Values.powerdnsadmin.db.name }}
+
+    -- DROP DATABASE {{ .Values.powerdnsadmin.db.name }};
+
+    CREATE DATABASE {{ .Values.powerdnsadmin.db.name }}
+        WITH 
+        OWNER = {{ .Values.postgresql.postgresqlUsername }}
+        ENCODING = 'UTF8'
+        LC_COLLATE = 'en_US.UTF-8'
+        LC_CTYPE = 'en_US.UTF-8'
+        CONNECTION LIMIT = -1;
+
+    GRANT ALL ON DATABASE {{ .Values.powerdnsadmin.db.name }} TO postgres;
+
+    GRANT ALL ON DATABASE {{ .Values.powerdnsadmin.db.name }} TO {{ .Values.postgresql.postgresqlUsername }};
+
+    GRANT TEMPORARY, CONNECT ON DATABASE {{ .Values.powerdnsadmin.db.name }} TO PUBLIC;
+  2-schemaDefault.sql: |
     CREATE TABLE domains (
       id                    SERIAL PRIMARY KEY,
       name                  VARCHAR(255) NOT NULL,

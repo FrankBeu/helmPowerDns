@@ -92,13 +92,12 @@ powerdns:
 # ** postgresql
 #
 postgresql:
+  postgresqlPostgresPassword: postgres
+  postgresqlDatabase: pdns
+  postgresqlUsername: pdns
+  postgresqlPassword: pdns
+  servicePort: 5432
   initdbScriptsConfigMap: initdbscript
-  global:
-    postgresql:
-      postgresqlDatabase: pdns
-      postgresqlUsername: pdns
-      postgresqlPassword: pdns
-      servicePort: 5432
   persistence:
     size: 1Gi
   resources: {}
@@ -131,6 +130,8 @@ powerdnsadmin:
     name: example.org
     namespace: ambassador-hosts
     privateKeySecretName: "letsencrypt-youremail.org"
+  db:
+    name: pdnsadmin
   resources: {}
   # resources:
   #   limits:
