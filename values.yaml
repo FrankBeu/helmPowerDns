@@ -65,6 +65,7 @@ affinity: {}
 
 clusterDomain: cluster.local
 
+
 ###
 ##
 # ** powerdns
@@ -96,6 +97,7 @@ postgresql:
   #     cpu: 100m
   #     memory: 128Mi
 
+
 ###
 ##
 # ** powerdnsadmin
@@ -110,10 +112,10 @@ powerdnsadmin:
   service:
     type: ClusterIP
     port: 9191
-  filter: "basic-auth" ### {"basic-allow"|"basic-auth"|"basic-deny"|"ory"}
+  filter: "basic-auth"                                 ### {"basic-allow"|"basic-auth"|"basic-deny"|"ory"}
   host:
     acmeEmail:            "name@youremail.org"
-    certStaging:          false     ### true: letsencryptStaging; false:letsencrypt
+    certStaging:          false                        ### true: letsencryptStaging; false:letsencrypt
     name: example.org
     namespace: ambassador-hosts
     privateKeySecretName: "letsencrypt-youremail.org"
@@ -127,6 +129,11 @@ powerdnsadmin:
   #   requests:
   #     cpu: 100m
   #     memory: 128Mi
+  config:
+    user: ### TODO
+    setting:
+      signup_enabled: 'False'   ### Values: {'True'|'False'} hase to be string in order to map to python-bool
+
 
 ###
 ##

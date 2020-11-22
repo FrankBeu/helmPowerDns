@@ -96,6 +96,9 @@ app.kubernetes.io/name: {{ include "powerdns.name" . }}admin
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+*** database-url
+*/}}
 {{- define "powerdnsadmin.postgresql.dns" -}}
 {{- printf "postgresql://%s:%s@%s-postgresql.%s:%.f/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword .Release.Name .Release.Namespace .Values.postgresql.servicePort .Values.powerdnsadmin.db.name -}}
 {{- end -}}
@@ -112,4 +115,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- $repositoryName := .Values.job.image.repository -}}
 {{- $tag := .Values.job.image.tag | toString -}}
 {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- end -}}
+
+{{/*
+*** api-url
+*/}}
+{{- define "powerdnsadmin.api-url" -}}
+{{- printf "http://%s-webserver.%s" (include "powerdns.fullname" .) .Release.Namespace -}}
 {{- end -}}

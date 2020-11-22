@@ -8,3 +8,7 @@ https://github.com/halkeye-helm-charts/powerdnsadmin.git
 ## Dependencies
 Postgresql \
 https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+
+## TODOs
+### icon
+    defined in Chart.yaml
