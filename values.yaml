@@ -127,3 +127,14 @@ powerdnsadmin:
   #   requests:
   #     cpu: 100m
   #     memory: 128Mi
+
+###
+##
+# ** jobs
+#
+job:
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: 11.10.0-debian-10-r0
+    pullPolicy: IfNotPresent

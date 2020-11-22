@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "powerdns.fullname" . }}admin-db-setup
+  labels:
+    {{- include "powerdnsadmin.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      name: {{ include "powerdns.fullname" . }}admin-db-setup
+      labels:
+        {{- include "powerdnsadmin.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+        - name: {{ include "powerdns.fullname" . }}admin-db-setup-init
+          image: {{ template "job.imageName" . }}
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          command: [ "bin/sh", "-c", "psql -a -c 'select * from setting;' -c 'select * from user;'" ]
+          env:
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_host
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_password
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}admin
+                  key: postgres_database_admin
+      containers:
+        - name: {{ include "powerdns.fullname" . }}admin-db-setup-main
+          image: {{ include "job.imageName" . }}
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          #command: [ "bin/sh", "-c", "psql -a -f /dbSetupScripts/*" ]
+          command: [ "bin/sh", "-c", "echo in CONTAINER; ls /dbSetupScripts" ]
+          env:
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_host
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_password
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}admin
+                  key: postgres_database_admin
+          volumeMounts:
+           - name: db-setup-scripts
+             mountPath: /dbSetupScripts
+      volumes:
+      - name: db-setup-scripts
+        secret:
+          secretName: powerdnsadmin-setup
+      restartPolicy: OnFailure
