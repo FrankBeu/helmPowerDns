@@ -81,8 +81,7 @@ tasks:
     desc: "add the signed helmChart to harbor.thesym.site/library"
     cmds:
       - |
-        helm package --sign --key frank@thesym.site .
-        # summon --up bash -c 'curl -F "chart=@`ls {{.name}}-*.tgz`" -F "prov=@`ls {{.name}}-*.tgz.prov`" https://frank:${PASSWORD}@harbor.thesym.site/api/chartrepo/charts'           ### library
+        summon --up bash -c 'helm package --sign --passphrase-file ${HELMPASSPHRASE} --key frank@thesym.site .'
         summon --up bash -c 'curl -F "chart=@`ls {{.name}}-*.tgz`" -F "prov=@`ls {{.name}}-*.tgz.prov`" https://frank:${PASSWORD}@harbor.thesym.site/api/chartrepo/{{.name}}/charts' ### project
         rm ./{{.name}}-*.tgz*
     silent: true
