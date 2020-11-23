@@ -103,19 +103,20 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- printf "postgresql://%s:%s@%s-postgresql.%s:%.f/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword .Release.Name .Release.Namespace .Values.postgresql.servicePort .Values.powerdnsadmin.db.name -}}
 {{- end -}}
 
+{{/*
+*** Return the proper image name for the psql-image used as {init,job}Container
+*/}}
+{{- define "psql.imageName" -}}
+{{- $registryName := .Values.powerdnsadmin.psqlImage.registry -}}
+{{- $repositoryName := .Values.powerdnsadmin.psqlImage.repository -}}
+{{- $tag := .Values.powerdnsadmin.psqlImage.tag | toString -}}
+{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- end -}}
+
 
 {{/*
 ** JOBS
 */}}
-{{/*
-*** Return the proper image name for the jobs
-*/}}
-{{- define "job.imageName" -}}
-{{- $registryName := .Values.job.image.registry -}}
-{{- $repositoryName := .Values.job.image.repository -}}
-{{- $tag := .Values.job.image.tag | toString -}}
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- end -}}
 
 {{/*
 *** api-url

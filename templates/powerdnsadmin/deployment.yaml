@@ -26,6 +26,32 @@ spec:
       serviceAccountName: {{ template "powerdns.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: {{ include "powerdns.fullname" . }}admin-init
+          image: {{ template "psql.imageName" . }}
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          command: [ "bin/sh", "-c", "pg_isready" ]
+          env:
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_host
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_password
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "powerdns.fullname" . }}admin
+                  key: postgres_database_admin
       containers:
         - name: {{ .Chart.Name }}admin
           securityContext:

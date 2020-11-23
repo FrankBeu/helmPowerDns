@@ -109,6 +109,11 @@ powerdnsadmin:
     # tag: ""
     # tag: latest
     tag: 0.2.3
+  psqlImage:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: 11.10.0-debian-10-r0
+    pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 9191
@@ -132,7 +137,7 @@ powerdnsadmin:
   config:
     user: ### TODO
     setting:
-      signup_enabled: 'False'   ### Values: {'True'|'False'} hase to be string in order to map to python-bool
+      signup_enabled: false   ### Values: {true|false}
 
 
 ###
@@ -140,8 +145,3 @@ powerdnsadmin:
 # ** jobs
 #
 job:
-  image:
-    registry: docker.io
-    repository: bitnami/postgresql
-    tag: 11.10.0-debian-10-r0
-    pullPolicy: IfNotPresent

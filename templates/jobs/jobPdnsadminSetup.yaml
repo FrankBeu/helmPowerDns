@@ -13,9 +13,16 @@ spec:
     spec:
       initContainers:
         - name: {{ include "powerdns.fullname" . }}admin-db-setup-init
-          image: {{ template "job.imageName" . }}
+          image: {{ template "psql.imageName" . }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-          command: [ "bin/sh", "-c", "psql -a -c 'select * from setting;' -c 'select * from user;'" ]
+          command:
+            - /bin/sh
+            - -c
+            - >
+              set -x;
+              while [ $(psql -qtAX -c "select (exists (select 1 from information_schema.tables where table_name = 'setting'))::int;" || echo 0) -ne 1 ]; do
+                 sleep 15;
+              done
           env:
             - name: PGHOST
               valueFrom:
@@ -39,10 +46,8 @@ spec:
                   key: postgres_database_admin
       containers:
         - name: {{ include "powerdns.fullname" . }}admin-db-setup-main
-          image: {{ include "job.imageName" . }}
+          image: {{ include "psql.imageName" . }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-          #command: [ "bin/sh", "-c", "psql -a -f /dbSetupScripts/*" ]
-          command: [ "bin/sh", "-c", "echo in CONTAINER; ls /dbSetupScripts" ]
           command:
             - /bin/sh
             - -c

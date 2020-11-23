@@ -15,9 +15,9 @@ spec:
     spec:
       initContainers:
         - name: {{ include "powerdns.fullname" . }}admin-db-setup-init
-          image: {{ template "job.imageName" . }}
+          image: {{ template "psql.imageName" . }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-          ###  TODO command: [ "bin/sh", "-c", "psql -a -c 'select * from setting;' -c 'select * from user;'" ]
+          command: [ "bin/sh", "-c", "pg_isready" ]
           env:
             - name: PGHOST
               valueFrom:
@@ -42,7 +42,7 @@ spec:
                   key: postgres_database_admin
       containers:
         - name: {{ include "powerdns.fullname" . }}admin-db-setup-main
-          image: {{ include "job.imageName" . }}
+          image: {{ include "psql.imageName" . }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           ###  TODO #command: [ "bin/sh", "-c", "psql -a -f /dbSetupScripts/*" ]
           ###  TODO command: [ "bin/sh", "-c", "echo in CONTAINER; ls /dbSetupScripts" ]
