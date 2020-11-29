@@ -1,5 +1,3 @@
-### TODO
-{{ if false }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -35,17 +33,27 @@ spec:
                   name: {{ include "powerdns.fullname" . }}
                   key: postgres_password
             - name: PGDATABASE
-              ### TODO
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "powerdns.fullname" . }}admin
-                  key: postgres_database_admin
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_database
       containers:
         - name: {{ include "powerdns.fullname" . }}admin-db-setup-main
           image: {{ include "psql.imageName" . }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-          ###  TODO #command: [ "bin/sh", "-c", "psql -a -f /dbSetupScripts/*" ]
-          ###  TODO command: [ "bin/sh", "-c", "echo in CONTAINER; ls /dbSetupScripts" ]
+          command:
+            - /bin/sh
+            - -c
+            - >
+               psql -a
+               -c "TRUNCATE TABLE comments       CASCADE;"
+               -c "TRUNCATE TABLE cryptokeys     CASCADE;"
+               -c "TRUNCATE TABLE domainmetadata CASCADE;"
+               -c "TRUNCATE TABLE domains        CASCADE;"
+               -c "TRUNCATE TABLE records        CASCADE;"
+               -c "TRUNCATE TABLE supermasters   CASCADE;"
+               -c "TRUNCATE TABLE tsigkeys       CASCADE;"
+          command: [ "bin/sh", "-c", "./setupScripts/1-dnsSetup.sh" ]
           env:
             - name: PGHOST
               valueFrom:
@@ -63,22 +71,16 @@ spec:
                   name: {{ include "powerdns.fullname" . }}
                   key: postgres_password
             - name: PGDATABASE
-              ### TODO
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "powerdns.fullname" . }}admin
-                  key: postgres_database_admin
-          ### TODO
+                  name: {{ include "powerdns.fullname" . }}
+                  key: postgres_database
           volumeMounts:
-           - name: db-setup-scripts
-             mountPath: /dbSetupScripts
+           - name: setup-scripts
+             mountPath: /setupScripts
       volumes:
-      ### TODO
-      - name: db-setup-scripts
+      - name: setup-scripts
         secret:
-          secretName: powerdnsadmin-setup
+          secretName: powerdns-dns-setup
+          defaultMode: 0777
       restartPolicy: OnFailure
-### TODO
-{{ end }}
-
-
