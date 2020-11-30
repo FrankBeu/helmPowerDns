@@ -1,0 +1,12 @@
+{
+    "id": "169.207.93.in-addr.arpa.",
+    "name": "169.207.93.in-addr.arpa.",
+    "kind": "Master",
+    "nameservers": [
+        "ns1.domain.com.",
+        "ns2.domain.com."
+    ],
+    "soa_edit": "EPOCH",
+    "soa_edit_api": "EPOCH"
+
+}
