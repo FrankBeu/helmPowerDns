@@ -1,0 +1,19 @@
+{
+    "id": "thesym.site.",
+    "name": "thesym.site.",
+    "kind": "Master",
+    "nameservers": [
+        "thesym.site.",
+        "ns1.domain.com.",
+        "ns2.domain.com."
+    ],
+    "records": [
+        {
+            "content": "thesym.site. domainadmin.thesym.site. 1 1800 900 604800 86400",
+            "disabled": false,
+            "type": "SOA",
+            "ttl": 3600,
+            "name": "thesym.site"
+        }
+    ]
+}
