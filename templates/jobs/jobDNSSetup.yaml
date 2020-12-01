@@ -41,19 +41,7 @@ spec:
         - name: {{ include "powerdns.fullname" . }}admin-db-setup-main
           image: {{ include "psql.imageName" . }}
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-          command:
-            - /bin/sh
-            - -c
-            - >
-               psql -a
-               -c "TRUNCATE TABLE comments       CASCADE;"
-               -c "TRUNCATE TABLE cryptokeys     CASCADE;"
-               -c "TRUNCATE TABLE domainmetadata CASCADE;"
-               -c "TRUNCATE TABLE domains        CASCADE;"
-               -c "TRUNCATE TABLE records        CASCADE;"
-               -c "TRUNCATE TABLE supermasters   CASCADE;"
-               -c "TRUNCATE TABLE tsigkeys       CASCADE;"
-          command: [ "bin/sh", "-c", "./setupScripts/1-dnsSetup.sh" ]
+          command: [ "bin/sh", "-c", "./dnsSetup/dnsSetup.sh" ]
           env:
             - name: PGHOST
               valueFrom:
@@ -76,11 +64,15 @@ spec:
                   name: {{ include "powerdns.fullname" . }}
                   key: postgres_database
           volumeMounts:
-           - name: setup-scripts
-             mountPath: /setupScripts
+           - name: dns-setup
+             mountPath: /dnsSetup/
       volumes:
-      - name: setup-scripts
-        secret:
-          secretName: powerdns-dns-setup
+      - name: dns-setup
+        projected:
           defaultMode: 0777
+          sources:
+            - secret:
+                name: {{ include "powerdns.fullname" . }}-dns-setup
+            - configMap:
+                name: {{ include "powerdns.fullname" . }}-dns-setup
       restartPolicy: OnFailure

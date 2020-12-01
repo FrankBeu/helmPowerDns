@@ -23,7 +23,13 @@
 .vscode/
 
 ###
-##
-# ** FILES
+## ** FILES
+#
 Taskfile.yml
 secrets.yml
+
+
+###
+## ** EXCLUDE from chart
+#
+*/*/*/HELMIGNORE/
