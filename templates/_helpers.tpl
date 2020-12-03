@@ -124,3 +124,31 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "powerdnsadmin.api-url" -}}
 {{- printf "http://%s-webserver.%s" (include "powerdns.fullname" .) .Release.Namespace -}}
 {{- end -}}
+
+{{/*
+*** reverse-ip
+*/}}
+{{- define "dns.ip-reverse" -}}
+{{- $ipSplitted := splitList "." .Values.dns.ip -}}
+{{- $ipSplittedReverse := reverse $ipSplitted -}}
+{{- $ipReverse := join "." $ipSplittedReverse -}}
+{{- printf "%s" $ipReverse -}}
+{{- end -}}
+
+{{/*
+*** record-template
+*/}}
+{{- define "dns.record-template" -}}
+{{- printf "{\n" -}}
+{{- printf "  \"name\": \"%s.\",\n" .name -}}
+{{- printf "  \"type\": \"%s\",\n" .type -}}
+{{- printf "  \"ttl\": %d,\n" (int .ttl) -}}
+{{- printf "  \"changetype\": \"REPLACE\",\n" -}}
+{{- printf "  \"records\": [\n" -}}
+{{- printf "    {\n" -}}
+{{- printf "      \"content\": \"%s\",\n" .content -}}
+{{- printf "      \"disabled\": false\n"  -}}
+{{- printf "    }\n"  -}}
+{{- printf "  ]\n"  -}}
+{{- printf "}"  -}}
+{{- end -}}

@@ -67,8 +67,7 @@ clusterDomain: cluster.local
 
 
 ###
-##
-# ** powerdns
+## ** powerdns
 #
 powerdns:
   dnssec: true
@@ -76,8 +75,7 @@ powerdns:
   # api_key: ""
 
 ###
-##
-# ** postgresql
+## ** postgresql
 #
 postgresql:
   postgresqlPostgresPassword: postgres
@@ -99,8 +97,7 @@ postgresql:
 
 
 ###
-##
-# ** powerdnsadmin
+## ** powerdnsadmin
 #
 powerdnsadmin:
   image:
@@ -144,3 +141,11 @@ powerdnsadmin:
       email:    'name@youremail.org'
     setting:
       signup_enabled: false   ### Values: {true|false}
+
+
+
+###
+## ** configuration of the domain and it's ResourceRecords
+#
+dns:
+  ip: 10.0.0.1

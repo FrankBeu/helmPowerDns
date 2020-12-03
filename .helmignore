@@ -30,6 +30,10 @@ secrets.yml
 
 
 ###
-## ** EXCLUDE from chart
+## ** DIRS
 #
+TEST
+HELMIGNORE/
+*/HELMIGNORE/
+*/*/HELMIGNORE/
 */*/*/HELMIGNORE/

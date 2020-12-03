@@ -6,188 +6,114 @@ metadata:
 {{ include "powerdnsadmin.labels" . | indent 4 }}
 data:
   zone.json: |
+    {{- range $domain := .Values.dns.domains }}
     {
-        "id": "thesym.site.",
-        "name": "thesym.site.",
-        "kind": "Master",
-        "nameservers": [
-            "ns1.domain.com.",
-            "ns2.domain.com."
-        ],
-        "soa_edit": "EPOCH",
-        "soa_edit_api": "EPOCH"
-
+      "id":   "{{ .name }}.",
+      "name": "{{ .name }}.",
+      "kind": "{{ .kind }}",
+      "nameservers": [
+        {{- $nameservers := list -}}
+        {{- range $domain.records.nameserver -}}
+          {{- $nameservers = printf "\"%s\"" .content | append $nameservers -}}
+        {{- end -}}
+        {{ $nameservers | join ",\n" | nindent 8}}
+      ],
+      "soa_edit": "EPOCH",
+      "soa_edit_api": "EPOCH"
     }
+    {{- end }}
   zoneReverse.json: |
+    {{- range $domain := .Values.dns.domains }}
     {
-        "id": "169.207.93.in-addr.arpa.",
-        "name": "169.207.93.in-addr.arpa.",
-        "kind": "Master",
-        "nameservers": [
-            "ns1.domain.com.",
-            "ns2.domain.com."
-        ],
-        "soa_edit": "EPOCH",
-        "soa_edit_api": "EPOCH"
-
+      "id": "{{ include "dns.ip-reverse" $ }}.in-addr.arpa.",
+      "name": "{{ include "dns.ip-reverse" $ }}.in-addr.arpa.",
+      "kind": "{{ .kind }}",
+      "nameservers": [
+        {{- $nameservers := list -}}
+        {{- range $domain.records.nameserver -}}
+          {{- $nameservers = printf "\"%s\"" .content | append $nameservers -}}
+        {{- end -}}
+        {{ $nameservers | join ",\n" | nindent 8}}
+      ],
+      "soa_edit": "EPOCH",
+      "soa_edit_api": "EPOCH"
     }
+    {{- end }}
   rr.json: |
     {
-        "rrsets": [
+      "rrsets": [
+      {{- range $domain := .Values.dns.domains }}
+        {
+          "comments": [],
+          "name": "{{ .name }}.",
+          {{- with .records.startOfAuthority }}
+          "type": "SOA",
+          "ttl": {{ .ttl }},
+          "changetype": "REPLACE",
+          "records": [
             {
-                "comments": [],
-                "name": "thesym.site.",
-                "type": "SOA",
-                "ttl": 3600,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "ns1.domain.com. dnsadmin.domain.com. 2019090253 10800 3600 604800 3600",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "thesym.site.",
-                "type": "A",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "93.207.169.162",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "thesym.site.",
-                "type": "NS",
-                "ttl": 3600,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "ns1.domain.com.",
-                        "disabled": false
-                    },
-                    {
-                        "content": "ns2.domain.com.",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "thesym.site.",
-                "type": "MX",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "30 mail.thesym.site.",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "mail.thesym.site.",
-                "type": "A",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "93.207.169.162",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "*.thesym.site.",
-                "type": "A",
-                "ttl": 3600,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "93.207.169.162",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "*.thesym.site.",
-                "type": "MX",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "30 mail.thesym.site.",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "thesym.site.",
-                "type": "TXT",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "\"v=spf1 mx a:mail.thesym.site -all\"",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "_dmarc.thesym.site.",
-                "type": "TXT",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "\"v=DMARC1; p=reject; adkim=s; aspf=s\"",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "dkim._domainkey.thesym.site.",
-                "type": "TXT",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsezGzA1n6+6/q216w63aCh9S59OS5hxbtcybT1C1jMZxcSyxT/PhbUfQWJpPeIcucK1sVTKwOkZmlwb+cIEI+UyQBN1J43Zwu5aFIjiD40AAterln58Lo/sZF/IOL4lQokDG698gZRCy5ccJAD9bPQP1IhIc1SbtsIItaD6rBZW+jjD3e58JSPLNcrbww1NiabetuNOYLrTxkDP6q9fgQJ7fWqJxhizeu/zMBTQxhkPiDzd7vXJnUXpmZ0uuwvUOFq7Y/4/F9/BCt1VXBG0/twUgCwFfJ+K1VoABF3NroGnugPPL91de5T+/9fZdz8A/ei2/G1lVxfDQj/BI9lvsDQIDAQAB\"",
-                        "disabled": false
-                    }
-                ]
+              "content": "{{ .mname }} {{ .rname }} {{ now | unixEpoch }} {{ .refresh }} {{ .retry }} {{ .expire }} {{ .negativeTTL }}",
+              "disabled": false
             }
-        ]
+          ]
+          {{- end }}
+        },
+        {
+          "name": "thesym.site.",
+          "type": "NS",
+          {{- with (first .records.nameserver) }}
+          "ttl": {{ .ttl }},
+          {{- end }}
+          "changetype": "REPLACE",
+          "records": [
+            {{- $nameservers := list -}}
+            {{- range $domain.records.nameserver -}}
+              {{- $nameservers = printf "{\n  \"content\": \"%s\",\n  \"disabled\": false\n}" .content | append $nameservers -}}
+            {{- end -}}
+            {{ $nameservers | join ",\n" | nindent 12 }}
+          ]
+        },
+        {{- /* create the {A,MX,TXT}-RR */}} 
+	  {{- $A_RR   := list -}}
+	  {{- $MX_RR  := list -}}
+	  {{- $TXT_RR := list -}}
+          {{- range $domain.records.address      -}} {{- $A_RR   = (include "dns.record-template" . ) | append $A_RR   -}} {{- end -}}
+	  {{- range $domain.records.mailExchange -}} {{- $MX_RR  = (include "dns.record-template" . ) | append $MX_RR  -}} {{- end -}}
+	  {{- range $domain.records.text         -}} {{- $TXT_RR = (include "dns.record-template" . ) | append $TXT_RR -}} {{- end -}}
+        {{- /* insert the RR */}} 
+	  {{- $A_RR   | join ",\n" | nindent 8 -}},
+	  {{- $MX_RR  | join ",\n" | nindent 8 -}},
+	  {{- $TXT_RR | join ",\n" | nindent 8 -}}
+      {{- end }}
+      ]
     }
   rrReverse.json: |
     {
-        "rrsets": [
+      "rrsets": [
+        {
+          "comments": [],
+          "name": "{{ include "dns.ip-reverse" .}}.in-addr.arpa.",
+          "type": "SOA",
+          "ttl": 3600,
+          "changetype": "REPLACE",
+          "records": [
             {
-                "comments": [],
-                "name": "169.207.93.in-addr.arpa.",
-                "type": "SOA",
-                "ttl": 3600,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "ns1.domain.com. dnsadmin.domain.com. 2019090253 10800 3600 604800 3600",
-                        "disabled": false
-                    }
-                ]
-            },
-            {
-                "name": "162.169.207.93.in-addr.arpa.",
-                "type": "PTR",
-                "ttl": 1800,
-                "changetype": "REPLACE",
-                "records": [
-                    {
-                        "content": "thesym.site.",
-                        "disabled": false
-                    }
-                ]
+              "content": "ns1.domain.com. dnsadmin.domain.com. 2019090253 10800 3600 604800 3600",
+              "disabled": false
             }
-        ]
+          ]
+        },
+        {
+          "name": "{{ include "dns.ip-reverse" .}}.in-addr.arpa.",
+          "type": "PTR",
+          "ttl": 1800,
+          "changetype": "REPLACE",
+          "records": [
+            {
+              "content": "thesym.site.",
+              "disabled": false
+            }
+          ]
+        }
+      ]
     }

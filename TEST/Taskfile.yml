@@ -1,0 +1,74 @@
+###
+##
+# * TASKFILE
+#  https://taskfile.dev
+#
+version: '3'
+
+vars:
+
+  name:                     powerdns
+
+  #chartRepoName:            "thesym.site/library"                                ### library
+  chartRepoName:            "thesym.site"                                        ### project
+  chartName:                "{{.name}}"
+
+  message:                   Tasks for {{.name}}-helm
+
+  templateDebugTarget:      "powerdns/initDbScriptConfigMap"
+
+
+tasks:
+
+  taskDebug:
+    desc: show all variables in Taskfile
+    cmds:
+      - |
+        echo -e \
+        "\n{{range $key, $value := .}} {{$key }}:  \e[92m{{$value}}\e[0m\n {{end}}\n"
+    silent: true
+
+
+  default:
+    desc: display info
+    cmds:
+      - |
+        echo -e \
+        "\n{{.message}}\n"
+      - |
+        task -l
+    silent: true
+
+
+###
+## ** ALPHABETIC
+#
+  chartDebug:
+    desc: debug chart
+    cmds:
+      - |
+        helm install \
+        {{.name}} \
+        .. \
+        -f dnsDefinition.yaml \
+        --dry-run \
+        --debug
+    silent: true
+
+
+  templateDebug:
+    desc: "debug template; USAGE: `task templateDebug templateDebugTarget=admin`; DEFAULT: ingress"
+    cmds:
+      - |
+        helm template .. \
+        -f dnsDefinition.yaml \
+        --debug \
+        -s templates/jobs/dnsConfig/DNSSetUp.yaml
+    silent: true
+
+
+  test:
+    desc: "run the dns-test in a loop - serial on SOA will differ"
+    cmds:
+      - ./testLoop.zsh
+    silent: true
