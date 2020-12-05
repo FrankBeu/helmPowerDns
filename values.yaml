@@ -148,4 +148,64 @@ powerdnsadmin:
 ## ** configuration of the domain and it's ResourceRecords
 #
 dns:
-  ip: 10.0.0.1
+  ip: &ip 10.0.0.1
+  domains:
+    - name: &domainName example.org
+      kind: Master
+      records:
+        nameserver:
+          #- name:     "@"
+          #  type:     NS
+          #  content:  example.org.
+          #  ttl:      3600                  ### used for all nameservers (first)
+          #  priority: null
+          - type:     NS
+            content:  ns1.your-provider.org.
+            ttl:      3600
+          - type:     NS
+            content:  ns2.your-provider.org.
+            ttl:      3600
+        startOfAuthority:
+          ttl:         3600
+          mname:       example.org.         ### primary
+          rname:       dnsadmin.example.org. ### contact
+          serial:      ""                   ### set automatically
+          refresh:     10800                ### 2ry query -> 1ry after Ns.  86400 (24h)
+          retry:       3600                 ### retry after Ns if 1ry does not respond. 7200 (2h)
+          expire:      604800               ### 2ry stop delivering after Ns if 1ry does not respond. 3600000 (1000h)
+          negativeTTL: 3600                 ### TTL for negative entries
+        address:
+          - name:     *domainName
+            type:     A
+            content:  *ip
+            ttl:      1800
+          - name:     mail.example.org
+            type:     A
+            content:  *ip
+            ttl:      1800
+          - name:     "*.example.org"
+            type:     A
+            content:  *ip
+            ttl:      3600
+        mailExchange:
+          - name:     *domainName
+            type:     MX
+            content:  "30 mail.example.org."
+            ttl:      1800
+          - name:     "*.example.org"
+            type:     MX
+            content:  "30 mail.example.org."
+            ttl:      1800
+        text:
+          - name:     *domainName
+            type:     TXT
+            content:  "\\\"v=spf1 mx a:mail.example.org -all\\\""
+            ttl:      1800
+          - name:     _dmarc.example.org
+            type:     TXT
+            content:  "\\\"v=DMARC1; p=reject; adkim=s; aspf=s\\\""
+            ttl:      1800
+          - name:     dkim._domainkey.example.org
+            type:     TXT
+            content:  "\\\"v=DKIM1; k=rsa; p=qwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwer\\\""
+            ttl:      1800

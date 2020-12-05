@@ -15,7 +15,8 @@ vars:
 
   message:                   Tasks for {{.name}}-helm
 
-  templateDebugTarget:      "powerdns/initDbScriptConfigMap"
+  #templateDebugTarget:      "powerdns/initDbScriptConfigMap"
+  templateDebugTarget:      "jobs/dnsConfig/DNSSetUp"
 
 
 tasks:
@@ -101,4 +102,11 @@ tasks:
         helm template . \
         --debug \
         -s templates/{{.templateDebugTarget}}.yaml
+    silent: true
+
+
+  test:
+    desc: "run the test for the dnsConfig in a loop - serial on SOA will always differ"
+    cmds:
+      - ./TEST/testLoop.zsh
     silent: true

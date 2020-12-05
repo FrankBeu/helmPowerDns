@@ -13,24 +13,24 @@ metadata:
 data:
   zone.json: |
     {
-      "id":   "thesym.site.",
-      "name": "thesym.site.",
+      "id":   "example.org.",
+      "name": "example.org.",
       "kind": "Master",
       "nameservers": [
-        "ns1.domain.com.",
-        "ns2.domain.com."
+        "ns1.your-provider.org.",
+        "ns2.your-provider.org."
       ],
       "soa_edit": "EPOCH",
       "soa_edit_api": "EPOCH"
     }
   zoneReverse.json: |
     {
-      "id": "241.237.133.84.in-addr.arpa.",
-      "name": "241.237.133.84.in-addr.arpa.",
+      "id": "1.0.0.10.in-addr.arpa.",
+      "name": "1.0.0.10.in-addr.arpa.",
       "kind": "Master",
       "nameservers": [
-        "ns1.domain.com.",
-        "ns2.domain.com."
+        "ns1.your-provider.org.",
+        "ns2.your-provider.org."
       ],
       "soa_edit": "EPOCH",
       "soa_edit_api": "EPOCH"
@@ -40,107 +40,107 @@ data:
       "rrsets": [
         {
           "comments": [],
-          "name": "thesym.site.",
+          "name": "example.org.",
           "type": "SOA",
           "ttl": 3600,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "ns1.domain.com. dnsadmin.domain.com. 2019090253 10800 3600 604800 3600",
+              "content": "example.org. dnsadmin.example.org. 1607171778 10800 3600 604800 3600",
               "disabled": false
             }
           ]
         },
         {
-          "name": "thesym.site.",
+          "name": "example.org.",
           "type": "NS",
           "ttl": 3600,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "ns1.domain.com.",
+              "content": "ns1.your-provider.org.",
               "disabled": false
             },
             {
-              "content": "ns2.domain.com.",
+              "content": "ns2.your-provider.org.",
               "disabled": false
             }
           ]
         },
         {
-          "name": "thesym.site.",
+          "name": "example.org.",
           "type": "A",
           "ttl": 1800,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "84.133.237.241",
+              "content": "10.0.0.1",
               "disabled": false
             }
           ]
         },
         {
-          "name": "mail.thesym.site.",
+          "name": "mail.example.org.",
           "type": "A",
           "ttl": 1800,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "84.133.237.241",
+              "content": "10.0.0.1",
               "disabled": false
             }
           ]
         },
         {
-          "name": "*.thesym.site.",
+          "name": "*.example.org.",
           "type": "A",
           "ttl": 3600,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "84.133.237.241",
+              "content": "10.0.0.1",
               "disabled": false
             }
           ]
         },
         {
-          "name": "thesym.site.",
+          "name": "example.org.",
           "type": "MX",
           "ttl": 1800,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "30 mail.thesym.site.",
+              "content": "30 mail.example.org.",
               "disabled": false
             }
           ]
         },
         {
-          "name": "*.thesym.site.",
+          "name": "*.example.org.",
           "type": "MX",
           "ttl": 1800,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "30 mail.thesym.site.",
+              "content": "30 mail.example.org.",
               "disabled": false
             }
           ]
         },
         {
-          "name": "thesym.site.",
+          "name": "example.org.",
           "type": "TXT",
           "ttl": 1800,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "\"v=spf1 mx a:mail.thesym.site -all\"",
+              "content": "\"v=spf1 mx a:mail.example.org -all\"",
               "disabled": false
             }
           ]
         },
         {
-          "name": "_dmarc.thesym.site.",
+          "name": "_dmarc.example.org.",
           "type": "TXT",
           "ttl": 1800,
           "changetype": "REPLACE",
@@ -152,14 +152,15 @@ data:
           ]
         },
         {
-          "name": "dkim._domainkey.thesym.site.",
+          "name": "dkim._domainkey.example.org.",
           "type": "TXT",
           "ttl": 1800,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsezGzA1n6+6/q216w63aCh9S59OS5hxbtcybT1C1jMZxcSyxT/PhbUfQWJpPeIcucK1sVTKwOkZmlwb+cIEI+UyQBN1J43Zwu5aFIjiD40AAterln58Lo/sZF/IOL4lQokDG698gZRCy5ccJAD9bPQP1IhIc1SbtsIItaD6rBZW+jjD3e58JSPLNcrbww1NiabetuNOYLrTxkDP6q9fgQJ7fWqJxhizeu/zMBTQxhkPiDzd7vXJnUXpmZ0uuwvUOFq7Y/4/F9/BCt1VXBG0/twUgCwFfJ+K1VoABF3NroGnugPPL91de5T+/9fZdz8A/ei2/G1lVxfDQj/BI9lvsDQIDAQAB\"",
+              "content": "\"v=DKIM1; k=rsa; p=qwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwerqwer\"",
               "disabled": false
+
             }
           ]
         }
@@ -170,25 +171,25 @@ data:
       "rrsets": [
         {
           "comments": [],
-          "name": "241.237.133.84.in-addr.arpa.",
+          "name": "1.0.0.10.in-addr.arpa.",
           "type": "SOA",
           "ttl": 3600,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "ns1.domain.com. dnsadmin.domain.com. 2019090253 10800 3600 604800 3600",
+              "content": "example.org. dnsadmin.example.org. 1607171778 10800 3600 604800 3600",
               "disabled": false
             }
           ]
         },
         {
-          "name": "241.237.133.84.in-addr.arpa.",
+          "name": "1.0.0.10.in-addr.arpa.",
           "type": "PTR",
           "ttl": 1800,
           "changetype": "REPLACE",
           "records": [
             {
-              "content": "thesym.site.",
+              "content": "example.org.",
               "disabled": false
             }
           ]
