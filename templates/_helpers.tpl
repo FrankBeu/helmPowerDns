@@ -126,13 +126,23 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
-*** reverse-ip
+*** reverse-ip-net (for PRT - without host)
 */}}
-{{- define "dns.ip-reverse" -}}
+{{- define "dns.ip-reverse-net" -}}
 {{- $ipSplitted := splitList "." .Values.dns.ip -}}
 {{- $ipSplittedReverse := reverse $ipSplitted -}}
-{{- $ipReverse := join "." $ipSplittedReverse -}}
-{{- printf "%s" $ipReverse -}}
+{{- $ipSplittedReverseWithoutHost := slice $ipSplittedReverse 1 -}}
+{{- $ipReverseNet := join "." $ipSplittedReverseWithoutHost -}}
+{{- printf "%s" $ipReverseNet -}}
+{{- end -}}
+{{/*
+*** reverse-ip-host (for PRT - only host)
+*/}}
+{{- define "dns.ip-reverse-host" -}}
+{{- $ipSplitted := splitList "." .Values.dns.ip -}}
+{{- $ipSplittedReverse := reverse $ipSplitted -}}
+{{- $ipReverseHost := first $ipSplittedReverse -}}
+{{- printf "%s" $ipReverseHost -}}
 {{- end -}}
 
 {{/*

@@ -25,8 +25,8 @@ data:
   zoneReverse.json: |
     {{- range $domain := .Values.dns.domains }}
     {
-      "id": "{{ include "dns.ip-reverse" $ }}.in-addr.arpa.",
-      "name": "{{ include "dns.ip-reverse" $ }}.in-addr.arpa.",
+      "id": "{{ include "dns.ip-reverse-net" $ }}.in-addr.arpa.",
+      "name": "{{ include "dns.ip-reverse-net" $ }}.in-addr.arpa.",
       "kind": "{{ .kind }}",
       "nameservers": [
         {{- $nameservers := list -}}
@@ -93,7 +93,7 @@ data:
       {{- range $domain := .Values.dns.domains }}
         {
           "comments": [],
-          "name": "{{ include "dns.ip-reverse" $}}.in-addr.arpa.",
+          "name": "{{ include "dns.ip-reverse-net" $}}.in-addr.arpa.",
           {{- with .records.startOfAuthority }}
           "type": "SOA",
           "ttl": {{ .ttl }},
@@ -107,7 +107,7 @@ data:
           {{- end }}
         },
         {
-          "name": "{{ include "dns.ip-reverse" $}}.in-addr.arpa.",
+          "name": "{{ include "dns.ip-reverse-host" $}}.{{ include "dns.ip-reverse-net" $}}.in-addr.arpa.",
           "type": "PTR",
           "ttl": 1800,
           "changetype": "REPLACE",

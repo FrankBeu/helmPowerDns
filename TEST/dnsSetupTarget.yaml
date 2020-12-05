@@ -25,8 +25,8 @@ data:
     }
   zoneReverse.json: |
     {
-      "id": "1.0.0.10.in-addr.arpa.",
-      "name": "1.0.0.10.in-addr.arpa.",
+      "id": "0.0.10.in-addr.arpa.",
+      "name": "0.0.10.in-addr.arpa.",
       "kind": "Master",
       "nameservers": [
         "ns1.your-provider.org.",
@@ -171,7 +171,7 @@ data:
       "rrsets": [
         {
           "comments": [],
-          "name": "1.0.0.10.in-addr.arpa.",
+          "name": "0.0.10.in-addr.arpa.",
           "type": "SOA",
           "ttl": 3600,
           "changetype": "REPLACE",
